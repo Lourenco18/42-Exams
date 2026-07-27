@@ -1,0 +1,14 @@
+"""
+For this exercise, you must implement the `constellation_mapper` function. The function must:
+- Take as a parameter a list of tuples, each consisting of an int(row) and an int(col).
+- Return a list[str] representing a grid of size `size` * `size`, composed of "." and "*" characters based on the coordinates provided in the `stars` variable.
+- Ignore coordinates that fall outside the grid boundaries.
+- Ignore duplicate coordinates.
+FUNCTION SIGNATURE
+def constellation_mapper(stars: list[tuple[int, int]], size: int) -> list[str]:
+EXAMPLES
+constellation_mapper([(0, 0), (1, 1), (2, 2)], 3)->["*..", ".*.", "..*"]
+constellation_mapper([(0, 0), (0, 1), (0, 2), (1, 1), (2, 2)], 3)->["***", ".*.", "..*"]
+constellation_mapper([(0, 0), (5, 5), (2, 2)], 3)->["*..", "...", "..*"]
+constellation_mapper([(0, 0), (5, 5)], 2)->["*.", ".."]
+"""
