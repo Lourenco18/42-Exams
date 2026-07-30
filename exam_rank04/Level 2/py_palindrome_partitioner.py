@@ -14,3 +14,25 @@ EXAMPLES
 palindrome_partitioner("aab")->1
 palindrome_partitioner("aba")->0
 palindrome_partitioner("abc")->2"""
+
+def palindrome_partitioner(s):
+    n = len(s)
+    """verifivacao"""
+    if n <= 1:
+        return 0
+    """logica"""
+    dp = list(range(n))
+    for i in range(n):
+        for l, r in [(i, i), (i, i + 1)]:
+            while l >= 0 and r < n and s[l] == s[r]:
+                if l == 0:
+                    dp[r] = 0
+                else:
+                    dp[r] = min(dp[r], dp[l - 1] + 1)
+                l -= 1
+                r += 1
+    return dp[-1]
+
+print(palindrome_partitioner("aab"))
+print(palindrome_partitioner("aba"))
+print(palindrome_partitioner("abc"))
