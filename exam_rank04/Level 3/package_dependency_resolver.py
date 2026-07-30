@@ -25,3 +25,51 @@ package_dependency_resolver({})->[]
 package_dependency_resolver({"X": ["Y"], "Y": ["X"]})->[]
 package_dependency_resolver({"web": [], "api": [], "frontend": ["web"], "backend": ["api"]})->["api", "backend", "web", "frontend"]
 """
+
+def package_dependency_resolver(packages: dict[str, list[str]]) -> list[str]:
+    """verificacoes"""
+    if not packages:
+        return []
+    result = []
+    indegree = {}
+    graph = {}
+    for package in packages:
+        indegree[package] = 0
+        graph[package] = []
+    for package in packages:
+        for dep in packages[package]:
+            if dep in packages:       
+                graph[dep].append(package)
+                indegree[package] += 1
+    queue = []
+    for package in indegree:
+        if indegree[package] == 0:
+            queue.append(package)
+    queue.sort()
+    while queue:
+        current = queue.pop(0)
+        result.append(current)
+        for nxt in graph[current]:
+            indegree[nxt] -= 1
+            if indegree[nxt] == 0:
+                queue.append(nxt)
+        queue.sort()
+        
+    if len(result) != len(packages):
+        return []
+
+    return result
+
+print(package_dependency_resolver(
+    {"app": ["database"], "database": ["driver"], "driver": []}
+))
+print(package_dependency_resolver(
+    {"A": [], "B": ["A"], "C": ["A", "B"]}
+))
+print(package_dependency_resolver({}))
+print(package_dependency_resolver(
+    {"X": ["Y"], "Y": ["X"]}
+))
+print(package_dependency_resolver(
+    {"web": [], "api": [], "frontend": ["web"], "backend": ["api"]}
+))
