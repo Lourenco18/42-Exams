@@ -30,6 +30,7 @@ def package_dependency_resolver(packages: dict[str, list[str]]) -> list[str]:
     """verificacoes"""
     if not packages:
         return []
+    """resultado"""
     result = []
     indegree = {}
     graph = {}
@@ -54,7 +55,7 @@ def package_dependency_resolver(packages: dict[str, list[str]]) -> list[str]:
             if indegree[nxt] == 0:
                 queue.append(nxt)
         queue.sort()
-        
+
     if len(result) != len(packages):
         return []
 
