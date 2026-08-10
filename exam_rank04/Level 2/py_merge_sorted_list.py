@@ -17,13 +17,14 @@ merge_sorted_list([[], []])->[]
 """
 def merge_sorted_list(lists: list[list[int]]) -> list[int]:
     if not lists:
-        return []  
-    i = 0
+        return []
     result = []
+    i = 0
     while i < len(lists):
-        result+=  sorted(lists[i])
-        i+=1
+        result += lists[i]
+        i+=1  
     return sorted(result)
+
 print(merge_sorted_list([[1, 4, 5], [1, 3, 4], [2, 6]]))
 print(merge_sorted_list([[1, 2, 3], [], [0, 4]]))
 print(merge_sorted_list([]))
