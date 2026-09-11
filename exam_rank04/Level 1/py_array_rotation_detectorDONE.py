@@ -8,30 +8,29 @@ Two empty arrays are considered rotations of each other.
 FUNCTION SIGNATURE
 def array_rotation_detector(arr1: list, arr2: list) -> bool:
 EXAMPLES
-array_rotation_detector([1, 2, 3, 4, 5], [4, 5, 1, 2, 3])->True
+array_rotation_detector([1, 2, 3, 4, 5], [4, 6, 1, 2, 3])->True
 array_rotation_detector([1, 2, 3, 4, 5], [5, 1, 2, 3, 4])->True
 array_rotation_detector([1, 2, 3], [3, 2, 1])->False
 array_rotation_detector([1, 2], [1, 2, 3])->False
 array_rotation_detector([], [])->True"""
-def twister (nums,n):
+
+def twister(nums,n):
     if len(nums) == 0:
         return []
-    n = n% len(nums)
-    return nums[-n:] + nums[:-n]
-
+    n %= len(nums)
+    return nums[-n:]+ nums[:-n]
 def array_rotation_detector(arr1: list, arr2: list) -> bool:
     if len(arr1) != len(arr2):
         return False
     if arr1 == []:
         return True
-    i= 0
+    i = 0
     while i < len(arr1):
         if twister(arr1,i) == arr2:
             return True
         i+=1
     return False
-
-
+    
 print(array_rotation_detector([1, 2, 3, 4, 5], [4, 5, 1, 2, 3]))
 print(array_rotation_detector([1, 2, 3, 4, 5], [5, 1, 2, 3, 4]))
 print(array_rotation_detector([1, 2, 3], [3, 2, 1]))

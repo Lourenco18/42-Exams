@@ -16,16 +16,15 @@ def constellation_mapper(stars: list[tuple[int, int]], size: int) -> list[str]:
     grid = []
     i = 0
     while i < size:
-        grid.append(["."] * size)
+        grid.append(["."]*size)
         i+=1
-    for row,col in stars:
+    for row, col in stars:
         if 0<= row < size and 0<= col < size:
-            grid[row][col] = '*'
+            grid[row][col] = "*"
     result = []
     for row in grid:
         result.append("".join(row))
     return result
-            
 print(constellation_mapper([(0, 0), (1, 1), (2, 2)], 3))
 print(constellation_mapper([(0, 0), (0, 1), (0, 2), (1, 1), (2, 2)], 3))
 print(constellation_mapper([(0, 0), (5, 5), (2, 2)], 3))

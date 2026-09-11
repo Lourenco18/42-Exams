@@ -15,22 +15,33 @@ palindrome_partitioner("aab")->1
 palindrome_partitioner("aba")->0
 palindrome_partitioner("abc")->2"""
 
+def is_palindrome(text):
+    return text == text[::-1]
+
+def find_min_cuts(s, dp, end):
+    best = end
+
+    for start in range(end + 1):
+        part = s[start:end + 1]
+
+        if is_palindrome(part):
+            if start == 0:
+                best = 0
+            else:
+                cuts = dp[start - 1] + 1
+                best = min(best, cuts)
+
+    return best
+
 def palindrome_partitioner(s):
-    n = len(s)
-    """verifivacao"""
-    if n <= 1:
+    if len(s) <= 1:
         return 0
-    """logica"""
-    dp = list(range(n))
-    for i in range(n):
-        for l, r in [(i, i), (i, i + 1)]:
-            while l >= 0 and r < n and s[l] == s[r]:
-                if l == 0:
-                    dp[r] = 0
-                else:
-                    dp[r] = min(dp[r], dp[l - 1] + 1)
-                l -= 1
-                r += 1
+
+    dp = [0] * len(s)
+
+    for end in range(len(s)):
+        dp[end] = find_min_cuts(s, dp, end)
+
     return dp[-1]
 
 print(palindrome_partitioner("aab"))

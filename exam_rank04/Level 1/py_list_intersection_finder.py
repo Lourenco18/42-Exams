@@ -20,9 +20,9 @@ list_intersection_finder([[1, 2, 3], []])->[]
 list_intersection_finder([[5]])->[5]
 """
 def list_intersection_finder(lists: list[list[int]]) -> list[int]:
-    if not lists :
+    if not lists:
         return []
-    result = [] 
+    result = []
     for value in lists[0]:
         if all(value in lista for lista in lists):
             if value not in result:
