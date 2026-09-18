@@ -18,9 +18,9 @@ def constellation_mapper(stars: list[tuple[int, int]], size: int) -> list[str]:
     while i < size:
         grid.append(["."]*size)
         i+=1
-    for row, col in stars:
-        if 0<= row < size and 0<= col < size:
-            grid[row][col] = "*"
+    for row,col in stars:
+        if 0 <= row < size and 0<= col < size:
+            grid[row][col]= "*"
     result = []
     for row in grid:
         result.append("".join(row))

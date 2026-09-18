@@ -16,18 +16,18 @@ sliding_window_maximium([4, 2, 12, 11, -5], 2)->[4, 12, 12, 11]
 sliding_window_maximium([], 3)->[]
 """
 def sliding_window_maximium(nums: list[int], k: int) -> list[int]:
-    if not nums or k >= len(nums) or k<=0:
+    if not nums or k > len(nums) or k <=0 :
         return []
     i = 0
     result = []
     while i < len(nums)-k+1:
-        j = 0
         temp = i
         biggest = nums[temp]
+        j = 0
         while j <= k-1:
             if biggest < nums[temp+j]:
                 biggest = nums[temp+j]
-            j+=1
+            j +=1
         i +=1
         result.append(biggest)
     return result
