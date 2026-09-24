@@ -27,39 +27,45 @@ package_dependency_resolver({"web": [], "api": [], "frontend": ["web"], "backend
 """
 
 def package_dependency_resolver(packages: dict[str, list[str]]) -> list[str]:
-    """verificacoes"""
     if not packages:
         return []
-    """resultado"""
     result = []
-    indegree = {}
-    graph = {}
+    waiting = {}
+    connections = {}
     for package in packages:
-        indegree[package] = 0
-        graph[package] = []
+        waiting[package] = 0
+        connections[package] = []
     for package in packages:
-        for dep in packages[package]:
-            if dep in packages:       
-                graph[dep].append(package)
-                indegree[package] += 1
-    queue = []
-    for package in indegree:
-        if indegree[package] == 0:
-            queue.append(package)
-    queue.sort()
-    while queue:
-        current = queue.pop(0)
-        result.append(current)
-        for nxt in graph[current]:
-            indegree[nxt] -= 1
-            if indegree[nxt] == 0:
-                queue.append(nxt)
-        queue.sort()
+        for dependency in packages[package]:
+            if dependency in packages:
+                connections[dependency].append(package)
+                waiting[package] += 1
+    
 
+    ready = []
+    for package in waiting:
+        if waiting[package] == 0:
+            ready.append(package)
+    ready.sort()
+    while ready:
+        current = ready.pop(0)
+        result.append(current)
+        for package in connections[current]:
+            waiting[package] -= 1
+            if waiting[package] == 0:
+                ready.append(package)
+        ready.sort()
+
+        
     if len(result) != len(packages):
         return []
-
     return result
+
+
+
+
+
+
 
 print(package_dependency_resolver(
     {"app": ["database"], "database": ["driver"], "driver": []}

@@ -18,7 +18,7 @@ def twister(nums,n):
     if len(nums) == 0:
         return []
     n %= len(nums)
-    return nums[-n:]+ nums[:-n]
+    return nums[-n:] + nums[:-n]
 def array_rotation_detector(arr1: list, arr2: list) -> bool:
     if len(arr1) != len(arr2):
         return False
@@ -58,12 +58,13 @@ def constellation_mapper(stars: list[tuple[int, int]], size: int) -> list[str]:
         grid.append(["."]*size)
         i+=1
     for row, col in stars:
-        if 0 <= row < size or 0 <= col < size:
+        if 0 <= row < size and 0 <= col < size:
             grid[row][col] = "*"
     result = []
     for row in grid:
         result.append("".join(row))
     return result
+
 print(constellation_mapper([(0, 0), (1, 1), (2, 2)], 3))
 print(constellation_mapper([(0, 0), (0, 1), (0, 2), (1, 1), (2, 2)], 3))
 print(constellation_mapper([(0, 0), (5, 5), (2, 2)], 3))
@@ -92,14 +93,14 @@ list_intersection_finder([[5]])->[5]
 """
 print("-----Intersection Finder-----")
 def list_intersection_finder(lists: list[list[int]]) -> list[int]:
-    if not lists:
+    if not lists: 
         return []
     result = []
     for value in lists[0]:
         if all(value in lista for lista in lists):
             if value not in result:
                 result.append(value)
-    return result 
+    return result
 print(list_intersection_finder([[1, 2, 3], [2, 3, 4], [2, 3, 5]]))
 print(list_intersection_finder([[1, 2, 3, 4], [2, 4, 6, 8], [4, 8, 12]]))
 print(list_intersection_finder([[1, 1, 2, 3], [1, 2, 2, 3], [1, 2, 3, 3]]))
@@ -126,13 +127,13 @@ merge_sorted_list([[], []])->[]
 """
 print("-----Merge List-----")
 def merge_sorted_list(lists: list[list[int]]) -> list[int]:
-    if not lists:
+    if not lists: 
         return []
-    i = 0
     result = []
+    i = 0
     while i < len(lists):
         result += lists[i]
-        i +=1 
+        i+=1
     return sorted(result)
 print(merge_sorted_list([[1, 5], [1, 3, 4], [2, 6]]))
 """Given a string `s`, find the minimum number of cuts needed to partition it such that every resulting substring is a palindrome.
@@ -152,25 +153,26 @@ palindrome_partitioner("aab")->1
 palindrome_partitioner("aba")->0
 palindrome_partitioner("abc")->2"""
 print("-----Palindrome-----")
-def is_palindrome(text):
-    return text == text[::-1]
-def find_min_cuts(s,dp,end):
+def is_palindrome(parcial):
+    return parcial == parcial[::-1] 
+def find_mi_cuts(s,dp,end):
     best = end
     for start in range(end+1):
-        part = s[start:end+1]
-        if is_palindrome(part):
+        parcial = s[start:end+1]
+        if is_palindrome(parcial):
             if start == 0:
-                best =0
+                best = 0
             else:
-                cuts = dp[start-1] +1
+                cuts = dp[start -1] +1
                 best = min(best,cuts)
     return best
+
 def palindrome_partitioner(s: str) -> int:
     if len(s) <=1:
         return 0
     dp = [0] * len(s)
-    for end in range(len(s)):
-        dp[end] = find_min_cuts(s,dp,end)
+    for end in range (len(s)):
+        dp[end] = find_mi_cuts(s,dp,end)
     return dp[-1]
 print(palindrome_partitioner("aac"))
 print(palindrome_partitioner("aba"))
@@ -194,18 +196,93 @@ sliding_window_maximium([], 3)->[]
 """
 print("-----Sliding Window Maximium-----")
 def sliding_window_maximium(nums: list[int], k: int) -> list[int]:
-    if not nums or k <= 0 or k > len(nums):
+    if not nums or k <=0 or k > len(nums):
         return []
     i = 0
     result = []
     while i < len(nums) -k +1:
-        j = 1
         biggest = nums[i]
+        j = 1
         while j < k:
             if biggest < nums[i+j]:
                 biggest = nums[i+j]
             j+=1
         i+=1
         result.append(biggest)
-    return result
+    return result 
 print(sliding_window_maximium([4, 2, 12, 11, -5], 2))
+
+
+"""
+Write a function that determines a valid package installation order by resolving dependencies. Use topological sorting to ensure dependencies are installed before the packages that require them.
+
+The function should:
+- Take a dictionary where keys are package names and values are lists of dependencies.
+- Return packages in installation order (dependencies first).
+- Return an empty list ([]) if no valid order exists (e.g., circular dependencies or self-dependencies).
+- Handle empty inputs and isolated dependency chains gracefully.
+- Ignore references to packages that are not present as keys in the input dictionary.
+- Ensure a package cannot be installed until all its dependencies are installed.
+
+Algorithm Details & Edge Cases:
+- Topological Sorting: Use a topological sort algorithm (e.g., Kahn's algorithm).
+- Dependency Priority: Process packages with no remaining dependencies first.
+- Deterministic Output: When multiple valid packages can be processed at the same time (choices exist), process them alphabetically to ensure deterministic output.
+- Empty Input: Return an empty list.
+- Multiple Independent Chains: Process all chains, respecting the alphabetical order rule.
+- Missing Dependencies: Ignore missing packages (treat them as if they don't exist in the requirements).
+FUNCTION SIGNATURE
+def package_dependency_resolver(packages: dict[str, list[str]]) -> list[str]:
+EXAMPLES
+package_dependency_resolver({"app": ["database"], "database": ["driver"], "driver": []})->["driver", "database", "app"]
+package_dependency_resolver({"A": [], "B": ["A"], "C": ["A", "B"]})->["A", "B", "C"]
+package_dependency_resolver({})->[]
+package_dependency_resolver({"X": ["Y"], "Y": ["X"]})->[]
+package_dependency_resolver({"web": [], "api": [], "frontend": ["web"], "backend": ["api"]})->["api", "backend", "web", "frontend"]
+"""
+
+def package_dependency_resolver(packages: dict[str, list[str]]) -> list[str]:
+    if not packages:
+        return []
+    result = []
+    wait = {}
+    connections = {}
+    for package in packages:
+        wait[package] = 0
+        connections[package] = []
+    for package in packages:
+        for dependencies in packages[package]:
+            if dependencies in packages:
+                wait[package] +=1
+                connections[dependencies].append(package)
+    ready = []
+    for package in wait:
+        if wait[package] ==0:
+            ready.append(package)
+    ready.sort()
+    result = []
+    while ready:
+        current = ready.pop(0)
+        result.append(current)
+        for package in connections[current]:
+            wait[package]-=1
+            if wait[package] == 0:
+                ready.append(package)
+        ready.sort()
+    if len(result) != len(packages):
+        return []
+    return result
+    
+print(package_dependency_resolver(
+    {"app": ["database"], "database": ["driver"], "driver": []}
+))
+print(package_dependency_resolver(
+    {"A": [], "B": ["A"], "C": ["A", "B"]}
+))
+print(package_dependency_resolver({}))
+print(package_dependency_resolver(
+    {"X": ["Y"], "Y": ["X"]}
+))
+print(package_dependency_resolver(
+    {"web": [], "api": [], "frontend": ["web"], "backend": ["api"]}
+))
